@@ -46,7 +46,8 @@ class Tag(models.Model):
     
 
 class Comment(models.Model):
-    # user
+    user = models.ForeignKey(User,related_name='comments', on_delete=models.CASCADE,null=True,blank=True)
+    story = models.ForeignKey(Story,related_name='comments', on_delete=models.CASCADE,null=True,blank=True)
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
 

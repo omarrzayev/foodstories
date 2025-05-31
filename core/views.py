@@ -15,7 +15,15 @@ def home(request):
     }
     return render(request, 'index.html', context=context)
 
-def story_detail(request, id):
+def story_detail(request,id):
+    if request.method ==  'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save()
+            comment.story = Story.objects.get(id=id)
+            comment.user = request.user
+            comment.save() 
+    form = CommentForm()
     story = Story.objects.get(id=id)
     categories = Category.objects.all()
     recent_stories = Story.objects.order_by('-id')[:3]
@@ -24,7 +32,8 @@ def story_detail(request, id):
         'data': story,
         'categories': categories,
         'recent_stories': recent_stories,
-        'tags':tag
+        'tags':tag,
+        'form':form,
     }
     return render(request, 'single.html', context=context)
 
